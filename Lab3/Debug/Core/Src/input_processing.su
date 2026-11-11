@@ -1,6 +1,6 @@
-../Core/Src/input_processing.c:36:22:fsm_for_button	24	static
-../Core/Src/input_processing.c:79:13:traffic_start	8	static
-../Core/Src/input_processing.c:92:13:traffic_tick	16	static
-../Core/Src/input_processing.c:127:13:enter_modify_mode	16	static
-../Core/Src/input_processing.c:136:13:increase_temp_value	16	static
-../Core/Src/input_processing.c:144:6:fsm_for_input_processing	16	static
+../Core/Src/input_processing.c:22:22:fsm_for_button	24	static
+../Core/Src/input_processing.c:58:13:traffic_start	8	static
+../Core/Src/input_processing.c:71:13:traffic_tick	16	static
+../Core/Src/input_processing.c:101:13:enter_modify_mode	16	static
+../Core/Src/input_processing.c:109:13:increase_temp_value	16	static
+../Core/Src/input_processing.c:116:6:fsm_for_input_processing	16	static

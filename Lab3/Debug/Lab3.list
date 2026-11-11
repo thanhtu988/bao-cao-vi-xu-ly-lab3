@@ -39,15 +39,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_macro  00016625  00000000  00000000  0000fb32  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   000089cc  00000000  00000000  00026157  2**0
+ 18 .debug_line   000089c8  00000000  00000000  00026157  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000825a1  00000000  00000000  0002eb23  2**0
+ 19 .debug_str    000825a1  00000000  00000000  0002eb1f  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  000028cc  00000000  00000000  000b10c4  2**2
+ 20 .debug_frame  000028cc  00000000  00000000  000b10c0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000081  00000000  00000000  000b3990  2**0
+ 21 .debug_line_str 00000081  00000000  00000000  000b398c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_loclists 0000023c  00000000  00000000  000b3a11  2**0
+ 22 .debug_loclists 0000023c  00000000  00000000  000b3a0d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -209,10 +209,10 @@ Disassembly of section .text:
  8000282:	e7e1      	b.n	8000248 <memset+0x64>
 
 08000284 <fsm_for_button>:
+enum ButtonState buttonState[N0_OF_BUTTONS] = {
+  BUTTON_RELEASED, BUTTON_RELEASED, BUTTON_RELEASED
 };
 
-/* Tra ve 1 dung MOT lan khi nut vua chuyen tu "nha" sang "nhan".
-   Giu nut bao lau cung chi tinh la 1 lan nhan. */
 static unsigned char fsm_for_button(unsigned char index)
 {
  8000284:	b580      	push	{r7, lr}
@@ -304,7 +304,6 @@ static unsigned char fsm_for_button(unsigned char index)
  8000308:	2100      	movs	r1, #0
  800030a:	54d1      	strb	r1, [r2, r3]
     }
-    /* de bai khong yeu cau tu tang khi giu nut -> khong lam gi them */
     break;
  800030c:	e003      	b.n	8000316 <fsm_for_button+0x92>
     break;
@@ -327,9 +326,9 @@ static unsigned char fsm_for_button(unsigned char index)
  8000324:	20000040 	.word	0x20000040
 
 08000328 <traffic_start>:
- * ===================================================================== */
-static int light_color[2];      /* mau dang sang cua tung tuyen          */
-static int light_counter[2];    /* so giay con lai cua mau do            */
+
+static int light_color[2];
+static int light_counter[2];
 
 static void traffic_start(void)
 {
@@ -489,10 +488,10 @@ static void traffic_tick(int road)
  8000440:	20000000 	.word	0x20000000
 
 08000444 <enter_modify_mode>:
-static int index_led = 0;       /* LED 7 doan dang duoc quet    */
 
-/* Vao mode chinh sua: tat het den, 2 LED tuyen 1 hien gia tri,
-   2 LED tuyen 2 hien so mode, bat dau nhip nhap nhay 2 Hz */
+static int temp_value;
+static int index_led = 0;
+
 static void enter_modify_mode(int current_value, int mode_number)
 {
  8000444:	b580      	push	{r7, lr}
@@ -525,7 +524,6 @@ static void enter_modify_mode(int current_value, int mode_number)
 
 08000478 <increase_temp_value>:
 
-/* Nut 2: tang 1 don vi, qua 99 thi quay ve 1 (khong co nut giam) */
 static void increase_temp_value(int mode_number)
 {
  8000478:	b580      	push	{r7, lr}
@@ -561,13 +559,11 @@ static void increase_temp_value(int mode_number)
 
 080004b0 <fsm_for_input_processing>:
 
-/* Goi lien tuc trong while(1) cua main() - Program 1.9 */
 void fsm_for_input_processing(void)
 {
  80004b0:	b580      	push	{r7, lr}
  80004b2:	b082      	sub	sp, #8
  80004b4:	af00      	add	r7, sp, #0
-  /* doc su kien 3 nut: moi lan nhan chi tinh 1 lan */
   unsigned char mode_pressed = fsm_for_button(BUTTON_MODE);
  80004b6:	2000      	movs	r0, #0
  80004b8:	f7ff fee4 	bl	8000284 <fsm_for_button>
@@ -609,7 +605,6 @@ void fsm_for_input_processing(void)
     break;
  8000508:	e093      	b.n	8000632 <fsm_for_input_processing+0x182>
 
-  /* ---------------- Mode 1: den giao thong chay binh thuong ---------------- */
   case MODE_1_NORMAL:
     if (timer0_flag == 1) {
  800050a:	4b58      	ldr	r3, [pc, #352]	@ (800066c <fsm_for_input_processing+0x1bc>)
@@ -652,7 +647,6 @@ void fsm_for_input_processing(void)
     break;
  800054e:	e069      	b.n	8000624 <fsm_for_input_processing+0x174>
 
-  /* ---------------- Mode 2: chinh thoi gian den DO ---------------- */
   case MODE_2_RED:
     if (timer1_flag == 1) {
  8000550:	4b49      	ldr	r3, [pc, #292]	@ (8000678 <fsm_for_input_processing+0x1c8>)
@@ -698,7 +692,6 @@ void fsm_for_input_processing(void)
     break;
  8000596:	e047      	b.n	8000628 <fsm_for_input_processing+0x178>
 
-  /* ---------------- Mode 3: chinh thoi gian den VANG ---------------- */
   case MODE_3_AMBER:
     if (timer1_flag == 1) {
  8000598:	4b37      	ldr	r3, [pc, #220]	@ (8000678 <fsm_for_input_processing+0x1c8>)
@@ -744,7 +737,6 @@ void fsm_for_input_processing(void)
     break;
  80005de:	e025      	b.n	800062c <fsm_for_input_processing+0x17c>
 
-  /* ---------------- Mode 4: chinh thoi gian den XANH ---------------- */
   case MODE_4_GREEN:
     if (timer1_flag == 1) {
  80005e0:	4b25      	ldr	r3, [pc, #148]	@ (8000678 <fsm_for_input_processing+0x1c8>)
@@ -780,7 +772,7 @@ void fsm_for_input_processing(void)
  8000614:	4b14      	ldr	r3, [pc, #80]	@ (8000668 <fsm_for_input_processing+0x1b8>)
  8000616:	2201      	movs	r2, #1
  8000618:	701a      	strb	r2, [r3, #0]
-      traffic_start();            /* chay lai tu dau voi thoi gian moi */
+      traffic_start();
  800061a:	f7ff fe85 	bl	8000328 <traffic_start>
     }
     break;
@@ -803,7 +795,6 @@ void fsm_for_input_processing(void)
  8000630:	bf00      	nop
   }
 
-  /* ---- quet 4 LED 7 doan (driver dau ra) ---- */
   if (timer2_flag == 1) {
  8000632:	4b15      	ldr	r3, [pc, #84]	@ (8000688 <fsm_for_input_processing+0x1d8>)
  8000634:	681b      	ldr	r3, [r3, #0]
@@ -847,8 +838,8 @@ void fsm_for_input_processing(void)
  800068c:	2000005c 	.word	0x2000005c
 
 08000690 <button_reading>:
-// we define counter for automatically increasing the value
-// after the button is pressed more than 1 second.
+static uint8_t flagForButtonPress1s[N0_OF_BUTTONS];
+
 static uint16_t counterForButtonPress1s[N0_OF_BUTTONS];
 
 void button_reading(void)
@@ -904,7 +895,6 @@ void button_reading(void)
  80006ea:	5cd3      	ldrb	r3, [r2, r3]
  80006ec:	2b00      	cmp	r3, #0
  80006ee:	d114      	bne.n	800071a <button_reading+0x8a>
-      // if a button is pressed, we start counting
       if (counterForButtonPress1s[i] < DURATION_FOR_AUTO_INCREASING) {
  80006f0:	79fb      	ldrb	r3, [r7, #7]
  80006f2:	4a19      	ldr	r2, [pc, #100]	@ (8000758 <button_reading+0xc8>)
@@ -921,8 +911,6 @@ void button_reading(void)
  800070a:	f822 1013 	strh.w	r1, [r2, r3, lsl #1]
  800070e:	e00d      	b.n	800072c <button_reading+0x9c>
       } else {
-        // the flag is turned on when 1 second has passed
-        // since the button is pressed.
         flagForButtonPress1s[i] = 1;
  8000710:	79fb      	ldrb	r3, [r7, #7]
  8000712:	4a12      	ldr	r2, [pc, #72]	@ (800075c <button_reading+0xcc>)
@@ -1049,7 +1037,7 @@ void display7SEG(int num)
  80007d6:	687b      	ldr	r3, [r7, #4]
  80007d8:	2b09      	cmp	r3, #9
  80007da:	dc21      	bgt.n	8000820 <display7SEG+0x58>
-  for (int i = 0; i < 7; i++) {                   /* SEG0..SEG6 = PB0..PB6 */
+  for (int i = 0; i < 7; i++) {
  80007dc:	2300      	movs	r3, #0
  80007de:	60fb      	str	r3, [r7, #12]
  80007e0:	e01a      	b.n	8000818 <display7SEG+0x50>
@@ -1076,7 +1064,7 @@ void display7SEG(int num)
  800080a:	461a      	mov	r2, r3
  800080c:	4807      	ldr	r0, [pc, #28]	@ (800082c <display7SEG+0x64>)
  800080e:	f000 fe72 	bl	80014f6 <HAL_GPIO_WritePin>
-  for (int i = 0; i < 7; i++) {                   /* SEG0..SEG6 = PB0..PB6 */
+  for (int i = 0; i < 7; i++) {
  8000812:	68fb      	ldr	r3, [r7, #12]
  8000814:	3301      	adds	r3, #1
  8000816:	60fb      	str	r3, [r7, #12]
@@ -1096,7 +1084,6 @@ void display7SEG(int num)
 
 08000830 <update7SEG>:
 
-/* Quet 1 LED theo 3 buoc cua Lab 2: tat het -> dat du lieu -> bat dung 1 LED */
 void update7SEG(int index)
 {
  8000830:	b580      	push	{r7, lr}
@@ -1186,7 +1173,6 @@ void update7SEG(int index)
 
 080008d4 <update7SEGBuffer>:
 
-/* Moi tuyen 2 LED 7 doan: tach so 2 chu so thanh hang chuc / hang don vi */
 void update7SEGBuffer(int road1_value, int road2_value)
 {
  80008d4:	b480      	push	{r7}
@@ -1250,10 +1236,10 @@ void update7SEGBuffer(int road1_value, int road2_value)
  8000948:	2000006c 	.word	0x2000006c
 
 0800094c <setTrafficLight>:
+  { N_RED_Pin | S_RED_Pin, N_AMBER_Pin | S_AMBER_Pin, N_GREEN_Pin | S_GREEN_Pin },
   { E_RED_Pin | W_RED_Pin, E_AMBER_Pin | W_AMBER_Pin, E_GREEN_Pin | W_GREEN_Pin }
 };
 
-/* Bat dung 1 mau cua 1 tuyen, 2 mau con lai tat */
 void setTrafficLight(int road, int color)
 {
  800094c:	b580      	push	{r7, lr}
@@ -1347,7 +1333,6 @@ void clearAllTrafficLights(void)
 
 080009f0 <toggleTrafficColor>:
 
-/* Dao trang thai ca 4 den cung mau (nhap nhay o mode 2-4) */
 void toggleTrafficColor(int color)
 {
  80009f0:	b580      	push	{r7, lr}
@@ -2283,8 +2268,6 @@ void timer_run(void)
 
 08000e80 <HAL_TIM_PeriodElapsedCallback>:
 
-/* ================= NGAT TIM2 (Program 1.6) =================
-   Moi TIMER_CYCLE ms: doc + chong doi 3 nut, roi dem cac software timer. */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
  8000e80:	b580      	push	{r7, lr}

@@ -1,16 +1,7 @@
-/*
- * timer.c
- *
- *  Created on: Oct 28, 2026
- */
-
 #include "main.h"
 #include "input_reading.h"
 #include "timer.h"
 
-/* ================= SOFTWARE TIMER (giong Program 1.6 cua Lab 2) =================
-   setTimerX(ms) doi ms ra so nhip ngat; timer_run() dem lui 1 nhip moi lan ngat,
-   dem ve 0 thi dung co timerX_flag de vong lap chinh biet "da den han". */
 int timer0_counter = 0;
 int timer0_flag    = 0;
 int timer1_counter = 0;
@@ -52,8 +43,6 @@ void timer_run(void)
   }
 }
 
-/* ================= NGAT TIM2 (Program 1.6) =================
-   Moi TIMER_CYCLE ms: doc + chong doi 3 nut, roi dem cac software timer. */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM2) {
