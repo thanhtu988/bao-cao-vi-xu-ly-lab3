@@ -17,7 +17,7 @@
 /* ---- thoi gian, don vi ms (Exercise 4: khong phu thuoc chu ky ngat) ---- */
 #define ONE_SECOND        1000          /* nhip dem lui cua den giao thong     */
 #define BLINK_DURATION    250           /* 2 Hz: sang 250 ms + tat 250 ms = 0,5 s */
-#define SCAN_DURATION     TIMER_CYCLE   /* moi nhip ngat quet 1 LED 7 doan     */
+#define SCAN_DURATION     (1000 / MAX_LED)  /* 250 ms moi LED -> quet 4 LED = 1 Hz (nhu Lab 2) */
 
 /* ---- gioi han gia tri thoi gian (de bai: 1 - 99) ---- */
 #define MIN_DURATION      1
