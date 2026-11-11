@@ -1,0 +1,791 @@
+% ================================================================
+%  BAO CAO LAB 3 - VI XU LY & VI DIEU KHIEN (VXL-VDK)
+%  Buttons/Switches - Den giao thong nga tu 3 nut, 4 mode
+%  Template ke thua tu BTL Kien Truc May Tinh CO2008
+%  Compiler: pdfLaTeX  (Overleaf -> Menu -> Compiler -> pdfLaTeX)
+% ================================================================
+\documentclass[a4paper,12pt]{article}
+
+% ---- Encoding & Language ----
+\usepackage[utf8]{vietnam}
+
+% ---- Math ----
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+% ---- Algorithm (TRUOC hyperref) ----
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+% ---- Graphics & Figures ----
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% ---- Tables ----
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{longtable}
+
+% ---- Page layout & style ----
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{setspace}
+\usepackage{changepage}
+\usepackage{geometry}
+\usepackage{extsizes}
+\usepackage{scrextend}
+
+% ---- Colors & misc ----
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{mdframed}
+\usepackage{pifont}
+\usepackage{textcomp}
+\usepackage{tabto}
+\usepackage{tocbibind}
+
+% ---- TikZ ----
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning,
+                calc, decorations.pathmorphing}
+
+% ---- Code Listings ----
+\usepackage{listings}
+
+% ---- Hyperref CUOI CUNG ----
+\usepackage[hidelinks]{hyperref}
+
+% ================================================================
+%  THONG TIN CAN DIEN  <<<<<<<<<<  SUA 6 DONG NAY LA XONG
+% ================================================================
+\newcommand{\hoten}{Đào Ngọc Thanh Tú}
+\newcommand{\mssv}{2413841}
+\newcommand{\lop}{L01}                      % <-- kiểm tra lại mã lớp
+\newcommand{\hocki}{261}                    % HK1 năm học 2026--2027
+\newcommand{\gvhd}{Lê Trọng Nhân}
+\newcommand{\videolink}{(dán link video demo vào đây)}   % <-- Ex10: link video YouTube/Drive
+\newcommand{\githublink}{https://github.com/thanhtu988/bao-cao-vi-xu-ly-lab3}
+
+% ================================================================
+%  TOC SETTINGS
+% ================================================================
+\cftsetpnumwidth{2cm}
+\renewcommand{\cftsubsecdotsep}{\cftdotsep}
+
+% ================================================================
+%  SECTION TITLE FORMAT
+% ================================================================
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{\centering}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ================================================================
+%  LISTINGS SETUP - C / HAL (thay cho MIPS o template cu)
+% ================================================================
+\captionsetup[lstlisting]{font=small, labelfont=bf, labelsep=colon}
+
+\lstdefinestyle{CHAL}{
+    language=C,
+    morekeywords={
+        uint8_t, uint16_t, uint32_t, int8_t, int16_t, int32_t, bool,
+        GPIO_TypeDef, GPIO_PinState, GPIO_InitTypeDef, TIM_HandleTypeDef,
+        HAL_GPIO_WritePin, HAL_GPIO_TogglePin, HAL_GPIO_ReadPin, HAL_GPIO_Init,
+        HAL_Delay, HAL_GetTick, HAL_Init, HAL_RCC_OscConfig, HAL_RCC_ClockConfig,
+        GPIO_PIN_SET, GPIO_PIN_RESET, GPIO_MODE_OUTPUT_PP, GPIO_MODE_INPUT,
+        GPIO_NOPULL, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW,
+        display7SEG, update7SEG, update7SEGBuffer, setTrafficLight,
+        clearAllTrafficLights, toggleTrafficColor, button_reading,
+        is_button_pressed, is_button_pressed_1s, fsm_for_input_processing,
+        fsm_for_button, traffic_start, traffic_tick, enter_modify_mode,
+        increase_temp_value, setTimer0, setTimer1, setTimer2,
+        timer_run, HAL_TIM_PeriodElapsedCallback, HAL_TIM_Base_Start_IT,
+        HAL_TIM_Base_Init, MX_TIM2_Init, SystemClock_Config,
+        MX_GPIO_Init, Error_Handler, __HAL_AFIO_REMAP_SWJ_DISABLE,
+        __HAL_RCC_TIM2_CLK_ENABLE, HAL_NVIC_SetPriority, HAL_NVIC_EnableIRQ,
+        __HAL_RCC_GPIOA_CLK_ENABLE, __HAL_RCC_GPIOB_CLK_ENABLE},
+    basicstyle=\footnotesize\ttfamily,
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=5pt,
+    backgroundcolor=\color{blue!12},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=single,
+    rulecolor=\color{white},
+    tabsize=2,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=true,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!40!black},
+    stringstyle=\color{red!80!black},
+}
+\lstset{style=CHAL}
+
+% ================================================================
+%  HEADER / FOOTER
+% ================================================================
+\fancyhead{}
+\fancyhead[L]{
+    \begin{tabular}{rl}
+        \begin{picture}(25,15)(0,0)
+            \put(0,-8){\includegraphics[width=8.5mm, height=8.5mm]{logobk.png}}
+        \end{picture}&
+        \begin{tabular}{l}
+            \textcolor{black}{\textbf{\bf \ttfamily Trường Đại Học Bách Khoa Tp.Hồ Chí Minh}}\\
+        \end{tabular}
+    \end{tabular}
+}
+\fancyhead[R]{
+    \begin{tabular}{l}
+        \tiny \bf \\
+        \tiny \bf
+    \end{tabular}
+}
+\fancyfoot{}
+\fancyfoot[L]{\scriptsize \ttfamily Báo cáo Lab 3 - Vi xử lý \& Vi điều khiển - Học kì \hocki}
+\fancyfoot[R]{\scriptsize \ttfamily Trang {\thepage}/\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ================================================================
+%  SECTION NUMBERING
+% ================================================================
+\makeatletter
+\renewcommand*{\thesection}{\Roman{section}}
+\renewcommand*{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand*{\p@subsection}{}
+\renewcommand*{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+\renewcommand*{\p@subsubsection}{}
+\makeatother
+
+% ================================================================
+%  GEOMETRY
+% ================================================================
+\geometry{
+    left=3cm,
+    right=2cm,
+    top=2.5cm,
+    bottom=2.5cm,
+    headsep=1.65cm
+}
+
+% ================================================================
+%  TIKZ STYLES - Flowchart
+% ================================================================
+\tikzset{
+    fc_start/.style={rectangle, rounded corners=8pt,
+        minimum width=3cm, minimum height=0.75cm,
+        text centered, draw=black, fill=green!25, font=\footnotesize},
+    fc_proc/.style={rectangle,
+        minimum width=4.5cm, minimum height=0.75cm,
+        text centered, draw=black, fill=blue!15, font=\footnotesize},
+    fc_dec/.style={diamond, aspect=2.8,
+        minimum width=3cm, minimum height=0.7cm,
+        text centered, draw=black, fill=yellow!35, font=\footnotesize},
+    fc_io/.style={rectangle,
+        minimum width=4cm, minimum height=0.75cm,
+        text centered, draw=black, fill=orange!20, font=\footnotesize},
+    fc_err/.style={rectangle,
+        minimum width=3cm, minimum height=0.75cm,
+        text centered, draw=red!70!black, fill=red!15, font=\footnotesize},
+    arr/.style={thick, ->, >=Stealth},
+}
+
+% ================================================================
+%  ALGORITHM2E KEYWORDS
+% ================================================================
+\SetKwFor{For}{for}{do}{}
+\SetKwIF{If}{ElseIf}{Else}{if}{then}{else if}{else}{}
+\SetKwFor{While}{while}{do}{}
+\SetKw{Return}{return}
+\SetKw{KwTo}{to}
+
+% ================================================================
+%  FONT SIZE
+% ================================================================
+\changefontsizes{13pt}
+
+% ================================================================
+%  CHONG TRAN LE - cac ten ham HAL_GPIO_... rat dai va khong ngat dong duoc
+% ================================================================
+\setlength{\emergencystretch}{3.5em}
+\tolerance=2000
+\hbadness=4000          % bot canh bao Underfull vat
+
+% ================================================================
+%  CUSTOM COMMANDS
+% ================================================================
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+% ---- Chen hinh: TU DONG hien khung do "CHUA CO ANH" neu file chua ton tai
+%      => file .tex compile duoc NGAY khi chua co anh nao.
+%      Cu bo anh vao thu muc img/ la khung do tu bien thanh anh that.
+%      \hinh{ten_file.png}{ti_le_be_rong}{Chu thich}{nhan}
+% Tu dong nhan ca .jpg lan .png; thieu anh thi hien khung do nhac ten file.
+% Cach dung: \hinh{ten_file_KHONG_duoi}{ti_le_rong}{Chu thich}{nhan}
+\newcommand{\hinhbox}[2]{%
+  \setlength{\fboxrule}{1pt}\setlength{\fboxsep}{0pt}%
+  \textcolor{red!70!black}{\fbox{%
+  \begin{minipage}[c][4.2cm][c]{0.8\textwidth}\centering
+    \textbf{\large [ CHƯA CÓ ẢNH ]}\\[0.6em]
+    \texttt{img/#1.jpg} \textit{hoặc} \texttt{img/#1.png}\\[0.6em]
+    \small\itshape #2
+  \end{minipage}}}}
+\newcommand{\hinh}[4]{%
+\begin{figure}[H]
+\centering
+\IfFileExists{img/#1.jpg}%
+  {\includegraphics[width=#2\textwidth]{img/#1.jpg}}%
+  {\IfFileExists{img/#1.png}%
+     {\includegraphics[width=#2\textwidth]{img/#1.png}}%
+     {\hinhbox{#1}{#3}}}%
+\caption{#3}
+\label{fig:#4}
+\end{figure}}
+
+% ---- Khung ghi chu
+\newmdenv[linecolor=blue!60!black, linewidth=0.8pt,
+          backgroundcolor=blue!5, roundcorner=4pt,
+          innertopmargin=6pt, innerbottommargin=6pt]{ghichu}
+
+% ================================================================
+%  BEGIN DOCUMENT
+% ================================================================
+\begin{document}
+\begin{spacing}{1.1}
+
+% ================================================================
+%  TRANG BIA
+% ================================================================
+\thispagestyle{empty}
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+    \draw[line width=2pt, blue!90!black]
+        ($(current page.north west) + (1.2cm,-1.2cm)$)
+        rectangle
+        ($(current page.south east) + (-1.2cm,1.2cm)$);
+\end{tikzpicture}
+\begin{tikzpicture}[remember picture, overlay]
+    \draw[line width=4pt, blue!70!black]
+        ($(current page.north west) + (1cm,-1cm)$)
+        rectangle
+        ($(current page.south east) + (-1cm,1cm)$);
+\end{tikzpicture}
+
+\begin{center}
+    \large \textbf{\MakeUppercase{Đại học Quốc gia Thành phố Hồ Chí Minh}} \\
+    \large \textbf{\MakeUppercase{Trường Đại học Bách Khoa}} \\
+    \large \textbf{\MakeUppercase{Khoa Khoa học và Kỹ thuật Máy tính}} \\
+    \vspace{0.2cm}
+    \rule{5cm}{0.5pt}
+    \vspace{0.5cm}
+
+    \includegraphics[width=9.5cm]{logo.png}
+    \vspace{0.6cm}
+
+    \large \textbf{\MakeUppercase{Báo cáo thực hành}} \\
+    \large \textbf{\MakeUppercase{Vi xử lý -- Vi điều khiển}} \\
+    \vspace{0.3cm}
+    \rule{7cm}{0.5pt} \\
+    \vspace{0.3cm}
+    \Large \textbf{\MakeUppercase{Lab 3: Nút nhấn và công tắc}} \\
+    \normalsize \textit{(Buttons/Switches -- đèn giao thông ngã tư)} \\
+    \vspace{1.2cm}
+
+    \normalsize
+    \begin{tabular}{rl}
+        Lớp: & \textbf{\lop} -- HK\hocki \\[0.3em]
+        Giảng viên hướng dẫn: & \textbf{\gvhd} \\[0.3em]
+        Sinh viên thực hiện: & \textbf{\hoten} -- \textbf{\mssv} \\
+    \end{tabular}
+    \vspace{1.2cm}
+
+    \begin{minipage}{0.85\textwidth}
+    \begin{ghichu}
+    \centering \textbf{Link source code (GitHub)} \\[0.3em]
+    \texttt{\small \url{\githublink}}
+    \end{ghichu}
+    \end{minipage}
+
+    \vfill
+    Thành phố Hồ Chí Minh -- \today \\
+\end{center}
+\end{titlepage}
+
+
+% ================================================================
+%  I. MOI TRUONG VA CAU HINH
+% ================================================================
+\section*{\centering I. MÔI TRƯỜNG VÀ CẤU HÌNH}
+\addcontentsline{toc}{section}{I. Môi trường và cấu hình}
+
+\subsection*{1. Công cụ sử dụng}
+
+\begin{center}
+\small
+\begin{tabular}{|l|l|}
+\hline
+Vi điều khiển & STM32F103C6Ux (Cortex-M3, HSI 8 MHz) \\\hline
+IDE / Sinh mã & STM32CubeIDE 1.7.0 + CubeMX 6.3.0, HAL FW\_F1 V1.8.7 \\\hline
+Mô phỏng      & Proteus 8.10 SP0 \\\hline
+Mã nguồn      & 1 project CubeIDE \texttt{Lab3} (tích hợp cả 10 exercise) \\\hline
+\end{tabular}
+\end{center}
+
+\subsection*{2. Phân bố chân và mức logic}
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{|l|l|c|X|}
+\hline
+\textbf{Chân} & \textbf{Nhãn} & \textbf{Mức bật} & \textbf{Chức năng} \\\hline
+PA1--PA6   & N\_*, S\_* (RED/AMBER/GREEN) & 0 & 6 đèn tuyến 1 (Bắc, Nam) \\\hline
+PA7--PA12  & E\_*, W\_* (RED/AMBER/GREEN) & 0 & 6 đèn tuyến 2 (Đông, Tây) \\\hline
+PB0--PB6   & SEG0--SEG6 & 0 & bus a--g chung, LED 7 đoạn chung anode \\\hline
+PB8--PB11  & EN0--EN3   & 0 & EN0--1: tuyến 1, EN2--3: tuyến 2 (qua PNP) \\\hline
+PB12--PB14 & BUTTON\_1--3 & 0 = nhấn & Input, điện trở 10K kéo lên 3.3V (Figure 1.3) \\\hline
+\end{tabularx}
+\end{center}
+
+\subsection*{3. Tổ chức file (Figure 1.6)}
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\texttt{input\_reading.c/h}    & đọc 3 nút mỗi 10 ms, chống dội (Program 1.2) \\\hline
+\texttt{input\_processing.c/h} & FSM nút nhấn, FSM chế độ, FSM đèn giao thông \\\hline
+\texttt{led\_display.c/h}      & \texttt{led\_buffer}, quét LED 7 đoạn, bật/tắt 12 đèn \\\hline
+\texttt{timer.c/h}             & \texttt{TIMER\_CYCLE}, software timer, callback ngắt TIM2 \\\hline
+\texttt{main.c}                & chỉ gọi \texttt{fsm\_for\_input\_processing()} trong \texttt{while(1)} (Program 1.9) \\\hline
+\end{tabularx}
+\end{center}
+
+% ================================================================
+%  II. KET QUA 10 EXERCISE
+% ================================================================
+\clearpage
+\section*{\centering II. KẾT QUẢ 10 EXERCISE}
+\addcontentsline{toc}{section}{II. Kết quả 10 exercise}
+
+% ---------------- EX 1 ----------------
+\subsection*{Exercise 1 -- Sketch an FSM}
+
+\textbf{Yêu cầu:} vẽ FSM mô tả cách giải bài toán đèn giao thông có 3 nút nhấn.
+
+Bài toán dùng \textbf{ba FSM} chạy song song trong \texttt{fsm\_for\_input\_processing()}.
+
+\textbf{(a) FSM nút nhấn} (Figure 1.9, dùng chung cho 3 nút) -- sự kiện ``nhấn'' chỉ phát ra \textbf{một lần}.
+
+\begin{center}
+\begin{tikzpicture}[node distance=4.2cm, >=Stealth, every node/.style={font=\footnotesize}]
+  \node[circle, draw, fill=green!20, minimum size=1.5cm, align=center] (r) {RELEASED};
+  \node[circle, draw, fill=yellow!30, minimum size=1.5cm, align=center, right of=r] (p) {PRESSED};
+  \node[circle, draw, fill=red!20, minimum size=1.5cm, align=center, right of=p, xshift=1cm] (l) {PRESSED\\$>$1 s};
+  \draw[->, thick] (r) to[bend left=20] node[above, align=center] {nhấn\\\textit{phát sự kiện}} (p);
+  \draw[->, thick] (p) to[bend left=20] node[below] {nhả} (r);
+  \draw[->, thick] (p) -- node[above, align=center] {giữ $\geq$ 1 s} (l);
+  \draw[->, thick] (l) to[bend left=35] node[below] {nhả} (r);
+\end{tikzpicture}
+\end{center}
+
+\textbf{(b) FSM chế độ} -- nút 1 chuyển mode theo vòng $1 \to 2 \to 3 \to 4 \to 1$.
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth, every node/.style={font=\footnotesize}]
+  \node[rectangle, rounded corners, draw, fill=gray!15, minimum width=1.4cm] (i) at (0,0) {INIT};
+  \node[rectangle, rounded corners, draw, fill=green!20, minimum width=2.6cm, align=center] (m1) at (3,0) {MODE 1\\bình thường};
+  \node[rectangle, rounded corners, draw, fill=red!20, minimum width=2.6cm, align=center] (m2) at (7.6,0) {MODE 2\\chỉnh ĐỎ};
+  \node[rectangle, rounded corners, draw, fill=yellow!30, minimum width=2.6cm, align=center] (m3) at (7.6,-2.6) {MODE 3\\chỉnh VÀNG};
+  \node[rectangle, rounded corners, draw, fill=green!30, minimum width=2.6cm, align=center] (m4) at (3,-2.6) {MODE 4\\chỉnh XANH};
+  \draw[->, thick] (i) -- (m1);
+  \draw[->, thick] (m1) -- node[above] {nút 1} (m2);
+  \draw[->, thick] (m2) -- node[right] {nút 1} (m3);
+  \draw[->, thick] (m3) -- node[below] {nút 1} (m4);
+  \draw[->, thick] (m4) -- node[left, align=right] {nút 1\\(chạy lại)} (m1);
+\end{tikzpicture}
+\end{center}
+
+Ở mode 2, 3, 4: 4 đèn cùng màu nhấp nháy 2 Hz; nút 2 tăng giá trị tạm (99 $\to$ 1); nút 3 lưu;
+tuyến 1 hiện giá trị, tuyến 2 hiện số mode.
+
+\textbf{(c) FSM đèn mỗi tuyến} (mode 1): ĐỎ $\to$ XANH $\to$ VÀNG $\to$ ĐỎ, đổi màu khi bộ đếm giây về 0.
+Tuyến 1 bắt đầu ĐỎ, tuyến 2 bắt đầu XANH.
+
+\begin{center}
+\begin{tikzpicture}[node distance=4cm, >=Stealth, every node/.style={font=\footnotesize}]
+  \node[circle, draw, fill=red!25, minimum size=1.3cm] (R) {ĐỎ};
+  \node[circle, draw, fill=green!30, minimum size=1.3cm, right of=R] (G) {XANH};
+  \node[circle, draw, fill=yellow!35, minimum size=1.3cm, right of=G] (A) {VÀNG};
+  \draw[->, thick] (R) -- node[above] {đếm về 0} (G);
+  \draw[->, thick] (G) -- node[above] {đếm về 0} (A);
+  \draw[->, thick] (A) to[bend left=30] node[below] {đếm về 0} (R);
+\end{tikzpicture}
+\end{center}
+
+% ---------------- EX 2 ----------------
+\clearpage
+\subsection*{Exercise 2 -- Proteus Schematic}
+
+\textbf{Yêu cầu:} vẽ sơ đồ Proteus cho bài toán.
+
+\hinh{ex02}{1.0}{Exercise 2 -- sơ đồ đèn giao thông ngã tư trong Proteus}{ex02}
+
+Gồm: STM32F103C6, 12 LED (4 đỏ, 4 vàng, 4 xanh, anode lên 3.3V qua 220$\Omega$),
+4 LED 7 đoạn chung anode (bus SEG chung, chân chung qua PNP), 3 nút nhấn có điện trở kéo lên 10K.
+
+% ---------------- EX 3 ----------------
+\subsection*{Exercise 3 -- Create STM32 Project}
+
+\textbf{Yêu cầu:} tạo project có chân đúng theo sơ đồ, ngắt timer khoảng 10 ms.
+
+GPIO Output: Push Pull, mức ban đầu \textbf{High} (đèn tắt). GPIO Input PB12--PB14: No pull.
+TIM2: Internal Clock, PSC = 7999, ARR = 9, bật NVIC.
+
+\begin{equation*}
+f_{\text{ngắt}} = \frac{8\,000\,000}{(7999+1)\times(9+1)} = 100\ \text{Hz}
+\;\Rightarrow\; T_{\text{ngắt}} = 10\ \text{ms}
+\end{equation*}
+
+\begin{lstlisting}[caption={Exercise 3 -- main.c (Program 1.9)}]
+  MX_GPIO_Init();
+  MX_TIM2_Init();
+  /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start_IT(&htim2);
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    fsm_for_input_processing();
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+\end{lstlisting}
+
+% ---------------- EX 4 ----------------
+\subsection*{Exercise 4 -- Modify Timer Parameters}
+
+\textbf{Yêu cầu:} khi đổi chu kì ngắt (1 ms, 100 ms) thì sửa ít nhất và không ảnh hưởng hệ thống (đèn vẫn 2 Hz).
+
+\textbf{Giải pháp:} mọi thời gian đều viết bằng \textbf{ms}, chỉ đổi ra số nhịp ngắt ở một chỗ là
+\texttt{setTimerX()} (chia cho \texttt{TIMER\_CYCLE}). Đổi chu kì ngắt chỉ cần sửa PSC/ARR và \texttt{TIMER\_CYCLE}.
+
+\begin{lstlisting}[caption={Exercise 4 -- timer.h, timer.c}]
+/* Chu ky ngat cua TIM2, don vi ms.
+   Exercise 4: khi doi chu ky ngat (PSC/ARR cua TIM2 trong file .ioc)
+   chi can sua DUY NHAT hang so nay. Moi khoang thoi gian khac trong
+   chuong trinh deu viet bang ms va duoc doi ra so nhip ngat qua TIMER_CYCLE. */
+#define TIMER_CYCLE   10
+
+void setTimer0(int duration)
+{
+  timer0_counter = duration / TIMER_CYCLE;
+  timer0_flag    = 0;
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if (htim->Instance == TIM2) {
+    button_reading();
+    timer_run();
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Exercise 4 -- cac thoi gian viet bang ms (input\_processing.c)}]
+#define ONE_SECOND        1000          /* nhip dem lui cua den giao thong     */
+#define BLINK_DURATION    250           /* 2 Hz: sang 250 ms + tat 250 ms = 0,5 s */
+#define SCAN_DURATION     TIMER_CYCLE   /* moi nhip ngat quet 1 LED 7 doan     */
+\end{lstlisting}
+
+\begin{center}
+\small
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Chu kì ngắt} & \textbf{PSC} & \textbf{ARR} & \texttt{TIMER\_CYCLE} & \textbf{Đèn 2 Hz (250 ms)} \\\hline
+1 ms   & 799  & 9  & 1   & 250 nhịp -- đúng \\\hline
+10 ms  & 7999 & 9  & 10  & 25 nhịp -- đúng \\\hline
+100 ms & 7999 & 99 & 100 & 2 nhịp = 200 ms \\\hline
+\end{tabular}
+\end{center}
+
+\begin{ghichu}
+\textbf{2 Hz} = một chu kì sáng--tắt 0,5 s $\Rightarrow$ đảo trạng thái mỗi \textbf{250 ms}.
+Ở 100 ms, \texttt{250/100} chia nguyên còn 2 nhịp nên đèn đảo mỗi 200 ms: software timer không đo được
+khoảng lẻ hơn chu kì ngắt. Với 1 ms phải dùng PSC = 799, ARR = 9 (không dùng ARR = 0 như đã gặp ở Lab 2).
+\end{ghichu}
+
+% ---------------- EX 5 ----------------
+\subsection*{Exercise 5 -- Adding code for button debouncing}
+
+\textbf{Yêu cầu:} thêm file đọc input và hiển thị output, chống dội nút, nhấn nút 1 thì tăng mode.
+
+Chống dội theo Program 1.2: mỗi 10 ms đọc chân một lần, chỉ cập nhật \texttt{buttonBuffer}
+khi \textbf{hai lần đọc liên tiếp giống nhau}. Mở rộng cho 3 nút bằng mảng \texttt{buttonPort[]}, \texttt{buttonPin[]}.
+
+\begin{lstlisting}[caption={Exercise 5 -- input\_reading.c}]
+void button_reading(void)
+{
+  for (uint8_t i = 0; i < N0_OF_BUTTONS; i++) {
+    debounceButtonBuffer2[i] = debounceButtonBuffer1[i];
+    debounceButtonBuffer1[i] = HAL_GPIO_ReadPin(buttonPort[i], buttonPin[i]);
+    if (debounceButtonBuffer1[i] == debounceButtonBuffer2[i])
+      buttonBuffer[i] = debounceButtonBuffer1[i];
+    if (buttonBuffer[i] == BUTTON_IS_PRESSED) {
+      // if a button is pressed, we start counting
+      if (counterForButtonPress1s[i] < DURATION_FOR_AUTO_INCREASING) {
+        counterForButtonPress1s[i]++;
+      } else {
+        // the flag is turned on when 1 second has passed
+        // since the button is pressed.
+        flagForButtonPress1s[i] = 1;
+      }
+    } else {
+      counterForButtonPress1s[i] = 0;
+      flagForButtonPress1s[i] = 0;
+    }
+  }
+}
+\end{lstlisting}
+
+Xử lý nút theo FSM Program 1.7; thay ``tăng PORTA'' bằng trả về 1 để báo nút vừa được nhấn:
+
+\begin{lstlisting}[caption={Exercise 5 -- input\_processing.c: FSM nut nhan}]
+static unsigned char fsm_for_button(unsigned char index)
+{
+  unsigned char pressed = 0;
+
+  switch (buttonState[index]) {
+  case BUTTON_RELEASED:
+    if (is_button_pressed(index)) {
+      buttonState[index] = BUTTON_PRESSED;
+      pressed = 1;
+    }
+    break;
+  case BUTTON_PRESSED:
+    if (!is_button_pressed(index)) {
+      buttonState[index] = BUTTON_RELEASED;
+    } else {
+      if (is_button_pressed_1s(index)) {
+        buttonState[index] = BUTTON_PRESSED_MORE_THAN_1_SECOND;
+      }
+    }
+    break;
+  case BUTTON_PRESSED_MORE_THAN_1_SECOND:
+    if (!is_button_pressed(index)) {
+      buttonState[index] = BUTTON_RELEASED;
+    }
+    /* de bai khong yeu cau tu tang khi giu nut -> khong lam gi them */
+    break;
+  }
+  return pressed;
+}
+\end{lstlisting}
+
+% ---------------- EX 6 ----------------
+\subsection*{Exercise 6 -- Adding code for displaying modes}
+
+\textbf{Yêu cầu:} hiện mode trên LED 7 đoạn và nhấp nháy đèn theo mode.
+
+Vào mode 2--4: tắt 12 đèn, tuyến 1 hiện giá trị đang chỉnh, tuyến 2 hiện số mode, timer1 đảo 4 đèn cùng màu mỗi 250 ms.
+
+\begin{lstlisting}[caption={Exercise 6 -- vao mode chinh sua va dao den}]
+static void enter_modify_mode(int current_value, int mode_number)
+{
+  clearAllTrafficLights();
+  temp_value = current_value;
+  update7SEGBuffer(temp_value, mode_number);
+  setTimer1(BLINK_DURATION);
+}
+
+void toggleTrafficColor(int color)
+{
+  HAL_GPIO_TogglePin(N_RED_GPIO_Port, ROAD_PIN[ROAD1][color] | ROAD_PIN[ROAD2][color]);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Exercise 6 -- quet LED 7 doan (led\_display.c)}]
+void update7SEG(int index)
+{
+  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin | EN1_Pin | EN2_Pin | EN3_Pin, EN_OFF);
+
+  switch (index) {
+  case 0:
+    display7SEG(led_buffer[0]);
+    HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, EN_ON);
+    break;
+  case 1:
+    display7SEG(led_buffer[1]);
+    HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, EN_ON);
+    break;
+  case 2:
+    display7SEG(led_buffer[2]);
+    HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, EN_ON);
+    break;
+  case 3:
+    display7SEG(led_buffer[3]);
+    HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, EN_ON);
+    break;
+  default:
+    break;
+  }
+}
+\end{lstlisting}
+
+% ---------------- EX 7 ----------------
+\subsection*{Exercise 7 -- Increasing time duration value for the red LEDs}
+
+\textbf{Yêu cầu:} nút 2 tăng thời gian đèn đỏ, nút 3 lưu giá trị.
+
+\begin{lstlisting}[caption={Exercise 7 -- tang gia tri 1 - 99 va mode 2}]
+static void increase_temp_value(int mode_number)
+{
+  temp_value++;
+  if (temp_value > MAX_DURATION) temp_value = MIN_DURATION;
+  update7SEGBuffer(temp_value, mode_number);
+}
+
+  case MODE_2_RED:
+    if (timer1_flag == 1) {
+      setTimer1(BLINK_DURATION);
+      toggleTrafficColor(COLOR_RED);
+    }
+    if (inc_pressed) increase_temp_value(2);
+    if (set_pressed) duration_red = temp_value;
+    if (mode_pressed) {
+      mode = MODE_3_AMBER;
+      enter_modify_mode(duration_amber, 3);
+    }
+    break;
+\end{lstlisting}
+
+% ---------------- EX 8, 9 ----------------
+\subsection*{Exercise 8, 9 -- Amber và green LEDs}
+
+\textbf{Yêu cầu:} tương tự Exercise 7 cho đèn vàng (mode 3) và đèn xanh (mode 4).
+Hai mode dùng chung \texttt{increase\_temp\_value()}, chỉ khác biến được lưu. Ở mode 4, nút 1 quay về mode 1 và chạy lại với giá trị mới.
+
+\begin{lstlisting}[caption={Exercise 8, 9 -- mode 3 va mode 4}]
+  case MODE_3_AMBER:
+    if (timer1_flag == 1) {
+      setTimer1(BLINK_DURATION);
+      toggleTrafficColor(COLOR_AMBER);
+    }
+    if (inc_pressed) increase_temp_value(3);
+    if (set_pressed) duration_amber = temp_value;
+    if (mode_pressed) {
+      mode = MODE_4_GREEN;
+      enter_modify_mode(duration_green, 4);
+    }
+    break;
+
+  case MODE_4_GREEN:
+    if (timer1_flag == 1) {
+      setTimer1(BLINK_DURATION);
+      toggleTrafficColor(COLOR_GREEN);
+    }
+    if (inc_pressed) increase_temp_value(4);
+    if (set_pressed) duration_green = temp_value;
+    if (mode_pressed) {
+      mode = MODE_1_NORMAL;
+      traffic_start();            /* chay lai tu dau voi thoi gian moi */
+    }
+    break;
+\end{lstlisting}
+
+% ---------------- EX 10 ----------------
+\subsection*{Exercise 10 -- To finish the project}
+
+\textbf{Yêu cầu:} tích hợp tất cả vào một project, quay video, nộp báo cáo và code.
+
+Tất cả nằm trong project \texttt{Lab3}. Mode 1 chạy FSM đèn của Exercise 1(c), mỗi giây giảm bộ đếm của 2 tuyến:
+
+\hinh{ex10}{1.0}{Exercise 10 -- mode 1: tuyến 1 đang VÀNG (02), tuyến 2 đang ĐỎ (02)}{ex10}
+
+\begin{lstlisting}[caption={Exercise 10 -- FSM den giao thong}]
+static void traffic_tick(int road)
+{
+  light_counter[road]--;
+  if (light_counter[road] <= 0) {
+    switch (light_color[road]) {
+    case COLOR_RED:
+      light_color[road]   = COLOR_GREEN;
+      light_counter[road] = duration_green;
+      break;
+    case COLOR_GREEN:
+      light_color[road]   = COLOR_AMBER;
+      light_counter[road] = duration_amber;
+      break;
+    case COLOR_AMBER:
+      light_color[road]   = COLOR_RED;
+      light_counter[road] = duration_red;
+      break;
+    default:
+      break;
+    }
+    setTrafficLight(road, light_color[road]);
+  }
+}
+\end{lstlisting}
+
+\begin{ghichu}
+\textbf{Video demo:} \texttt{\small \videolink}
+
+Mặc định ĐỎ 5 s, XANH 3 s, VÀNG 2 s (lấy theo Lab 1). Để hai tuyến khớp pha cần đặt ĐỎ = XANH + VÀNG.
+\end{ghichu}
+
+% ================================================================
+%  III. TONG KET
+% ================================================================
+\clearpage
+\section*{\centering III. TỔNG KẾT}
+\addcontentsline{toc}{section}{III. Tổng kết}
+
+\renewcommand{\arraystretch}{1.15}
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{|c|X|c|c|}
+\hline
+\textbf{Ex} & \textbf{Nội dung} & \textbf{Build} & \textbf{Mô phỏng} \\\hline
+1  & Vẽ FSM (nút, chế độ, đèn)              & -- & -- \\\hline
+2  & Sơ đồ Proteus                          & -- & \cmark \\\hline
+3  & Tạo project, TIM2 10 ms                & \cmark & \cmark \\\hline
+4  & Đổi chu kì ngắt chỉ sửa 1 hằng số      & \cmark & \cmark \\\hline
+5  & Chống dội, nút 1 đổi mode              & \cmark & \cmark \\\hline
+6  & Hiện mode, nhấp nháy 2 Hz              & \cmark & \cmark \\\hline
+7--9 & Chỉnh thời gian đèn đỏ, vàng, xanh   & \cmark & \cmark \\\hline
+10 & Tích hợp 1 project, video              & \cmark & \cmark \\\hline
+\end{tabularx}
+\end{center}
+\renewcommand{\arraystretch}{1.0}
+
+\hinh{build}{0.95}{Build trong STM32CubeIDE -- 0 errors, 0 warnings}{build}
+
+\vspace{0.5cm}
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{ghichu}
+\centering \textbf{Source code:} \texttt{\small \url{\githublink}}
+\end{ghichu}
+\end{minipage}
+\end{center}
+
+\end{spacing}
+\end{document}
